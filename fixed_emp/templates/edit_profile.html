@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Edit Profile{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <div class="card p-4">
+            <h4>✏️ Edit Profile</h4>
+
+            <form method="POST" action="/edit-profile/">
+                {% csrf_token %}  <!-- ✅ FIX #8 — CSRF token -->
+                <div class="mb-3">
+                    <label class="form-label">Phone</label>
+                    <input type="text" name="phone" class="form-control"
+                           value="{{ employee.phone }}">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Address</label>
+                    <textarea name="address" class="form-control">{{ employee.address }}</textarea>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Bio</label>
+                    <!-- ✅ FIX #4 — Label no longer says "HTML allowed" -->
+                    <textarea name="bio" class="form-control" rows="5">{{ employee.bio }}</textarea>
+                </div>
+                <button type="submit" class="btn btn-success">Save Changes</button>
+                <a href="/dashboard/" class="btn btn-secondary">Cancel</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

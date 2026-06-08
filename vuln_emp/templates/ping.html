@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Ping Tool{% endblock %}
+{% block content %}
+<div class="card p-4">
+    <h4>🖥 Network Ping Tool <span class="badge bg-danger">Command Injection</span></h4>
+    <div class="alert alert-warning">
+        Try payloads:<br>
+        <code>127.0.0.1 && whoami</code><br>
+        <code>127.0.0.1; cat /etc/passwd</code><br>
+        <code>127.0.0.1 | id</code>
+    </div>
+
+    <form method="POST">
+        <div class="mb-3">
+            <label class="form-label">Host / IP Address</label>
+            <input type="text" name="host" class="form-control"
+                   placeholder="127.0.0.1 && whoami">
+        </div>
+        <button type="submit" class="btn btn-danger">Run Ping</button>
+    </form>
+
+    {% if output %}
+        <div class="mt-4">
+            <h6>Output:</h6>
+            <pre class="bg-dark text-light p-3 rounded">{{ output }}</pre>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

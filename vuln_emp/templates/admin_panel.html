@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block title %}Admin Panel{% endblock %}
+{% block content %}
+
+<div class="alert alert-danger">
+    ⚠️ <strong>Broken Access Control:</strong> This page is accessible to ALL logged-in users, not just admins!
+</div>
+
+<h3>⚙️ Admin Panel</h3>
+
+<div class="row g-4">
+    <!-- Ping Tool -->
+    <div class="col-md-6">
+        <div class="card p-4 border-danger">
+            <h5 class="text-danger">🖥 Ping Tool <span class="badge bg-danger">Command Injection</span></h5>
+            <p class="small text-muted">Try: <code>127.0.0.1 && whoami</code> or <code>127.0.0.1; ls -la</code></p>
+            <form method="POST" action="/admin/ping/">
+                <div class="input-group mb-3">
+                    <input type="text" name="host" class="form-control"
+                           placeholder="e.g. 127.0.0.1 && whoami">
+                    <button type="submit" class="btn btn-danger">Ping</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Useful links -->
+    <div class="col-md-6">
+        <div class="card p-4">
+            <h5>🔗 Quick Links</h5>
+            <ul>
+                <li><a href="/api/debug/" target="_blank">/api/debug/ — Full settings dump</a></li>
+                <li><a href="/api/employees/" target="_blank">/api/employees/ — All employees JSON</a></li>
+                <li><a href="/api/user/1/" target="_blank">/api/user/1/ — User details + password hash</a></li>
+                <li><a href="/admin/" target="_blank">Django Admin panel</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Employee list -->
+<div class="card mt-4">
+    <div class="card-body">
+        <h5>All Employees (Admin View)</h5>
+        <table class="table table-sm">
+            <thead class="table-dark">
+                <tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th><th>Salary</th><th>SSN</th></tr>
+            </thead>
+            <tbody>
+            {% for emp in employees %}
+                <tr>
+                    <td>{{ emp.id }}</td>
+                    <td>{{ emp.name }}</td>
+                    <td>{{ emp.email }}</td>
+                    <td><span class="badge bg-secondary">{{ emp.role }}</span></td>
+                    <td>${{ emp.salary }}</td>
+                    <td class="text-danger">{{ emp.ssn }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Audit Logs -->
+<div class="card mt-4">
+    <div class="card-body">
+        <h5>Recent Audit Logs</h5>
+        {% for log in logs %}
+            <div class="border-bottom py-2">
+                <strong>{{ log.action }}</strong> — {{ log.performed_by }} — {{ log.timestamp }}
+            </div>
+        {% empty %}
+            <p class="text-muted">No logs yet.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

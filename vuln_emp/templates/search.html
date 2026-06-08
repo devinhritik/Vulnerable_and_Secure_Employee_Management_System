@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}Search{% endblock %}
+{% block content %}
+
+<div class="card p-4 mb-4">
+    <h4>🔍 Employee Search</h4>
+    <div class="alert alert-danger small">
+        ⚠️ SQL Injection vulnerability! Try: <code>' OR '1'='1</code> or <code>' UNION SELECT username,password,3,4,5,6,7,8,9,10,11 FROM auth_user--</code>
+    </div>
+
+    <form method="GET" action="/search/">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control"
+                   placeholder="Search by name or department..."
+                   value="{{ query }}">
+            <button type="submit" class="btn btn-danger">Search</button>
+        </div>
+    </form>
+</div>
+
+{% if results %}
+<div class="card">
+    <div class="card-body">
+        <h6>Results for: <strong>{{ query }}</strong></h6>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        {% for key in results.0.keys %}
+                            <th>{{ key }}</th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                {% for row in results %}
+                    <tr>
+                        {% for val in row.values %}
+                            <td>{{ val }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% elif query %}
+    <div class="alert alert-info">No results found for "{{ query }}"</div>
+{% endif %}
+{% endblock %}

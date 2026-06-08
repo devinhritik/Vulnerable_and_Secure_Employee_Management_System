@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+
+<div class="row mb-4">
+    <div class="col">
+        <h2>👥 Employee Dashboard</h2>
+        <p class="text-muted">Welcome back, <strong>{{ user.username }}</strong>!</p>
+    </div>
+    <div class="col-auto">
+        <a href="/search/" class="btn btn-outline-secondary">🔍 Search Employees</a>
+    </div>
+</div>
+
+<!-- Stats row -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="card p-3 text-center">
+            <h4>{{ employees|length }}</h4>
+            <p class="text-muted mb-0">Total Employees</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-3 text-center">
+            <h4><a href="/api/employees/" class="text-decoration-none">🔗</a></h4>
+            <p class="text-muted mb-0">API: /api/employees/</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-3 text-center">
+            <h4><a href="/api/debug/" class="text-decoration-none text-danger">⚠</a></h4>
+            <p class="text-muted mb-0">Debug Endpoint</p>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card p-3 text-center">
+            <h4><a href="/admin-panel/" class="text-decoration-none text-warning">🔓</a></h4>
+            <p class="text-muted mb-0">Admin Panel</p>
+        </div>
+    </div>
+</div>
+
+<!-- Employee Table -->
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title mb-3">All Employees</h5>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th>Role</th>
+                        <th>Email</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for emp in employees %}
+                    <tr>
+                        <td>{{ emp.id }}</td>
+                        <td>{{ emp.name }}</td>
+                        <td>{{ emp.department }}</td>
+                        <td>
+                            <span class="badge
+                                {% if emp.role == 'admin' %}bg-danger
+                                {% elif emp.role == 'manager' %}bg-warning
+                                {% else %}bg-success{% endif %}">
+                                {{ emp.role }}
+                            </span>
+                        </td>
+                        <td>{{ emp.email }}</td>
+                        <td>
+                            {% if emp.user %}
+                            <a href="/profile/{{ emp.user.id }}/" class="btn btn-sm btn-outline-primary">
+                                View Profile
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="6" class="text-center text-muted">No employees yet</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Vulnerability hints -->
+<div class="card mt-3 border-warning">
+    <div class="card-body">
+        <h6 class="text-warning">🎯 Practice Vulnerabilities</h6>
+        <ul class="small mb-0">
+            <li>Visit <code>/api/user/1/</code>, <code>/api/user/2/</code> — IDOR in API</li>
+            <li>Visit <code>/profile/1/</code>, <code>/profile/2/</code> — IDOR in web</li>
+            <li>Visit <code>/api/debug/</code> — Sensitive data exposure</li>
+            <li>Use <code>/search/?q=' OR '1'='1</code> — SQL Injection</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

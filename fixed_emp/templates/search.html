@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}Search{% endblock %}
+{% block content %}
+
+<div class="card p-4 mb-4">
+    <h4>🔍 Employee Search</h4>
+    <!-- ✅ FIX #1 — SQL injection banner removed; ORM makes it impossible anyway -->
+
+    <form method="GET" action="/search/">
+        <div class="input-group">
+            <input type="text" name="q" class="form-control"
+                   placeholder="Search by name or department..."
+                   value="{{ query|escape }}">
+            <button type="submit" class="btn btn-success">Search</button>
+        </div>
+    </form>
+</div>
+
+{% if results %}
+<div class="card">
+    <div class="card-body">
+        <h6>Results for: <strong>{{ query }}</strong></h6>
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Name</th>
+                        <th>Department</th>
+                        <th>Role</th>
+                        <th>Email</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for emp in results %}
+                    <tr>
+                        <td>{{ emp.name }}</td>
+                        <td>{{ emp.department }}</td>
+                        <td>{{ emp.role }}</td>
+                        <td>{{ emp.email }}</td>
+                        <td>
+                            {% if emp.user %}
+                            <a href="/profile/{{ emp.user.id }}/"
+                               class="btn btn-sm btn-outline-primary">View</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% elif query %}
+    <div class="alert alert-info">No results found for "{{ query }}"</div>
+{% endif %}
+{% endblock %}

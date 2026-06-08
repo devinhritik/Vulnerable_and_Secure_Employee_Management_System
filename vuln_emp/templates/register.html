@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Register{% endblock %}
+{% block content %}
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+        <div class="card p-4">
+            <h3 class="text-center mb-4">📝 Create Account</h3>
+
+            {% if error %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+
+            <form method="POST" action="/register/">
+                <div class="mb-3">
+                    <label class="form-label">Username</label>
+                    <input type="text" name="username" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Email</label>
+                    <input type="email" name="email" class="form-control">
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label class="form-label">Bio</label>
+                    <textarea name="bio" class="form-control" rows="3"
+                        placeholder="Tell us about yourself... (HTML allowed 😈)"></textarea>
+                    <!-- XSS: Try <script>alert('XSS')</script> in bio -->
+                </div>
+                <!--
+                    MASS ASSIGNMENT VULNERABILITY:
+                    This field lets users set their own role.
+                    A hidden field in a real attack would look like:
+                    <input type="hidden" name="role" value="admin">
+                    We make it visible here for learning:
+                -->
+                <div class="mb-3">
+                    <label class="form-label">Role <span class="badge bg-danger">Vuln: Mass Assignment</span></label>
+                    <select name="role" class="form-select">
+                        <option value="employee">Employee</option>
+                        <option value="manager">Manager</option>
+                        <option value="admin">Admin ← Try this!</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-danger w-100">Register</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

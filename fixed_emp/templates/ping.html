@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Ping Tool{% endblock %}
+{% block content %}
+<div class="card p-4">
+    <h4>🖥 Network Ping Tool</h4>
+    <!-- ✅ FIX #10 — Injection tips removed; server enforces strict IP/hostname validation -->
+
+    <form method="POST">
+        {% csrf_token %}  <!-- ✅ FIX #8 — CSRF token -->
+        <div class="mb-3">
+            <label class="form-label">Host / IP Address</label>
+            <input type="text" name="host" class="form-control"
+                   placeholder="192.168.1.1">
+        </div>
+        <button type="submit" class="btn btn-primary">Run Ping</button>
+    </form>
+
+    {% if output %}
+        <div class="mt-4">
+            <h6>Output:</h6>
+            <!-- ✅ FIX #4 — {{ output }} is auto-escaped; no mark_safe() used -->
+            <pre class="bg-dark text-light p-3 rounded">{{ output }}</pre>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
